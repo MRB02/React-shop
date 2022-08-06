@@ -2,13 +2,10 @@ import React from 'react'
 
 export default function GetItem(props) {
 
-console.log(props.good);
+const {id,name, description, full_background, price, addToCart } = props;
 
-const {id,name, description, full_background, price} = props.good; 
 
   return (
-   
-
         <div className="card" key={id}>
             <img src={full_background} alt={name} />
             <div className="title p-2">
@@ -17,9 +14,9 @@ const {id,name, description, full_background, price} = props.good;
             </div>
             <hr />
             <div className="btn_price d-flex justify-content-between align-items-center p-3">
-                <button className='btn btn-primary'>Buy</button>
+                <button className='btn btn-primary' onClick={()=>addToCart({id, name, price})}>Buy</button>
                  <h6>{price}$</h6>
-            </div>
+            </div> 
         </div>
   )
 }

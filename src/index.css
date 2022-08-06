@@ -28,3 +28,30 @@ code {
     flex-grow: 1;
     flex-direction: column;
 }
+
+.basket {
+    position: fixed;
+    font-size: 3.5rem;
+    right: 2rem;
+    bottom: 7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #bf360c;
+    border-radius: 7px;
+    color: #bf360c;
+}
+
+@media (min-width: 727px) {
+    .basket {
+        position: fixed;
+        font-size: 3.5rem;
+        right: 2rem;
+        bottom: unset;
+    }
+}
+
+.basket sub {
+    font-size: 18px;
+}
