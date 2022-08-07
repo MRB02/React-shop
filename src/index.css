@@ -41,6 +41,7 @@ code {
     border: 2px solid #bf360c;
     border-radius: 7px;
     color: #bf360c;
+    cursor: pointer;
 }
 
 @media (min-width: 727px) {
@@ -54,4 +55,20 @@ code {
 
 .basket sub {
     font-size: 18px;
+}
+
+.basket-list {
+    position: fixed;
+    width: 50rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close {
+    position: absolute;
+    top: 3rem;
+    right: 2rem;
+    color: white;
+    cursor: pointer;
 }
