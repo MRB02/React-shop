@@ -1,58 +1,87 @@
-import React, { useState, useEffect } from "react";
-import { Api_KEY, Api_URL } from "./Config";
-import Loader from "./Loader";
-import GetList from "./GetList";
-import Basket from "./Basket";
+import React from "react";
+import { useState, useEffect } from "react";
+import { API_KEY, API_URL } from "./Config.js";
+import  Loader  from "./Loader";
+import { GoodList } from "./GoodList";
+import Cart from "./Cart";
 import BasketList from "./BasketList";
 
-export default function Shops() {
+
+function Shop() {
   const [goods, setGoods] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [order, setOrder] = useState([]);
+  const [isBasketShow, setBasketShow] = useState(false)
 
-  const [isCartHas, setCartHas] =useState(false);
-
-
-
-
-  const HandleCartHas =()=>{
-    return setCartHas(!isCartHas)
-  }
-
-
-  const addToCart = (PropsOfItem) => {
+  const addToBasket = (item) => {
     const itemIndex = order.findIndex(
-      (orderedItem) => orderedItem.id === PropsOfItem.id
+      (orderItem) => orderItem.id === item.id
     );
 
     if (itemIndex < 0) {
       const newItem = {
-        ...PropsOfItem,
+        ...item,
         quantity: 1,
       };
       setOrder([...order, newItem]);
-    } 
-    else if(itemIndex>0) {
-      const newOrder = order.map((orderedItem, index) => {
+    } else {
+      const newOrder = order.map((orderItem, index) => {
         if (index === itemIndex) {
           return {
-            ...orderedItem,
-            quantity: orderedItem.quantity + 1,
+            ...orderItem,
+            quantity: orderItem.quantity + 1,
           };
         } else {
-          return PropsOfItem;
+          return orderItem;
         }
       });
 
       setOrder(newOrder);
     }
+
   };
+  const handleBasketShow = () => {
+    setBasketShow(!isBasketShow)
+  }
+  const removeFromBasket = (itemID) => {
+    const newOrder = order.filter(item => item.id !== itemID)
+    setOrder(newOrder)
+  }
+  const incrementQuantity = (itemID) => {
+    const newOrder = order.map(el => {
+      if (el.id === itemID) {
+        const newQuantity = el.quantity + 1
+        return {
+          ...el,
+          quantity: newQuantity
+        }
+      } else{
+        return el
+      }
+    })
+
+    setOrder(newOrder)
+  }
+  const decrementQuantity = (itemID) => {
+    const newOrder = order.map(el => {
+      if (el.id === itemID) {
+        const newQuantity = el.quantity - 1
+        return {
+          ...el,
+          quantity: newQuantity >= 0 ? newQuantity : 0
+        }
+      } else{
+        return el
+      }
+    })
+
+    setOrder(newOrder)
+  }
 
   useEffect(() => {
-    fetch(Api_URL, {
+    fetch(API_URL, {
       headers: {
-        Authorization: Api_KEY,
+        Authorization: API_KEY,
       },
     })
       .then((response) => response.json())
@@ -64,9 +93,17 @@ export default function Shops() {
 
   return (
     <div className="container content">
-      <Basket quantity={order.length} HandleCartHas={HandleCartHas} />
-      {loading ? <Loader /> : <GetList goods={goods} addToCart={addToCart} />}
-      {isCartHas && <BasketList order={order} HandleClose={HandleCartHas}  />}
+      <Cart quantity={order.length} handleBasketShow={handleBasketShow} />
+      {loading ? <Loader /> : <GoodList goods={goods} addToBasket={addToBasket} />}
+      {isBasketShow && <BasketList
+        order={order}
+        handleBasketShow={handleBasketShow}
+        removeFromBasket={removeFromBasket}
+        incrementQuantity={incrementQuantity}
+        decrementQuantity={decrementQuantity}
+      />}
     </div>
   );
 }
+
+export default Shop ;
